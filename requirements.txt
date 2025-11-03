@@ -1,0 +1,18 @@
+# Reddit API (GRATIS)
+praw>=7.7.1
+
+# Groq AI (GRATIS - substitui OpenAI)
+groq>=0.33.0
+
+# Google TTS (GRATIS - substitui OpenAI TTS)
+gtts>=2.5.0
+
+# Processamento de video
+moviepy>=1.0.3
+imageio-ffmpeg>=0.4.9
+
+# Variaveis de ambiente
+python-dotenv>=1.0.0
+
+# Requisicoes HTTP (para ElevenLabs OPCIONAL)
+requests>=2.31.0

@@ -1,0 +1,41 @@
+# ===================================
+# 🚫 ARQUIVOS IGNORADOS PELO GIT
+# ===================================
+
+# Chaves de API (NUNCA commitar!)
+.env
+
+# Vídeos gerados
+assets/output/*.mp4
+assets/output/*.mp3
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/

@@ -1,0 +1,10 @@
+📁 PASTA DE SAÍDA
+==================
+
+Os vídeos gerados serão salvos aqui automaticamente.
+
+Você verá arquivos como:
+- audio_20250103_145623.mp3 (áudio gerado)
+- video_20250103_145623.mp4 (vídeo final)
+
+Estes arquivos são criados pelo bot a cada execução.

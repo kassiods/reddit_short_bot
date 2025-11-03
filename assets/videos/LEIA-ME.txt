@@ -1,0 +1,32 @@
+📁 PASTA DE VÍDEOS DE FUNDO
+================================
+
+⚠️ IMPORTANTE: Coloque seus vídeos de fundo aqui!
+
+Esta pasta está vazia. Você precisa adicionar vídeos .mp4 aqui para que o bot funcione.
+
+🎥 ONDE BAIXAR VÍDEOS GRÁTIS:
+- Pexels: https://www.pexels.com/videos/
+- Pixabay: https://pixabay.com/videos/
+- Mixkit: https://mixkit.co/free-stock-video/
+
+🔥 VÍDEOS POPULARES PARA SHORTS:
+- Minecraft parkour/gameplay
+- Subway Surfers
+- Slime/ASMR satisfatório
+- Ondas do oceano
+- Animações satisfatórias
+- Gameplay casual
+
+💡 DICAS:
+- Use vídeos com pelo menos 1080p de resolução
+- Duração mínima de 60 segundos
+- Evite vídeos com copyright
+- Vídeos verticais 9:16 são melhores (mas não obrigatório)
+
+📝 FORMATOS SUPORTADOS:
+- .mp4 (recomendado)
+- .mov
+- .avi
+
+Após adicionar os vídeos aqui, rode: python main.py
