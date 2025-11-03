@@ -27,41 +27,74 @@ def summarize_text(title, text, max_duration=60):
         client = init_groq()
         
         # Calcula palavras máximas baseado na duração
-        max_words = int((max_duration / 60) * 150)
+        # Para narração em português com velocidade 1.8x: ~250 palavras/minuto
+        max_words = int((max_duration / 60) * 250)
         
         prompt = f"""
-Você é um roteirista especializado em vídeos curtos do Reddit.
+A partir de agora, você é meu "Roteirista de Impacto". Sua única função é pegar as histórias que eu enviar e transformá-las em roteiros curtos e envolventes, prontos para serem narrados no meu canal de Shorts.
 
-TAREFA: Adapte a história abaixo para um vídeo de {max_duration} segundos (~{max_words} palavras).
+Regras de Adaptação (Obrigatórias):
 
-REGRAS:
-1. Comece com um GANCHO impactante nos primeiros 3 segundos
-2. Use linguagem coloquial e natural (como se estivesse contando para um amigo)
-3. Mantenha o suspense e tensão da história original
-4. Termine com um final impactante ou pergunta provocativa
-5. NÃO use emojis ou markdown
-6. Use frases curtas e diretas
-7. Foque no conflito principal
+1. Maximizar o Impacto: Reescreva a história focando nos pontos de virada e emoções. Use uma linguagem que prenda a atenção do ouvinte imediatamente. O objetivo é gerar curiosidade e engajamento.
+
+2. Filtro de Conteúdo (Manter o Sentido): Substitua qualquer conteúdo sensível (gore, cenas sexuais, xingamentos ou linguagem pesada) por versões mais leves. A nova versão deve manter o sentido e a gravidade da cena original.
+
+3. Tom de Voz (Casual): Use sempre o "português do dia a dia". A narração deve soar como um amigo contando uma história. Evite qualquer formalidade.
+
+4. Clareza para Narração: Expanda todas as abreviações para que o texto flua perfeitamente na leitura.
+   - Exemplo 1: "M32" deve virar "uma mulher de 32 anos".
+   - Exemplo 2: "H40" deve virar "um homem de 40 anos".
+   - Exemplo 3: "FDS" deve virar "fim de semana".
+
+5. História Completa: A narração DEVE ter um início, meio e FIM claro. Não deixe a história em aberto ou cortada no meio. Conte a história completa com sua resolução ou conclusão.
+
+6. Estrutura Envolvente:
+   - Comece com um GANCHO forte (primeiros 3 segundos são cruciais)
+   - Desenvolva o conflito/tensão no meio com DETALHES e CONTEXTO
+   - Termine com um FINAL impactante, surpreendente ou que faça o ouvinte refletir
+
+7. Duração OBRIGATÓRIA: Sua narração DEVE ter EXATAMENTE {max_words} palavras (aproximadamente {max_duration} segundos). Isso é CRÍTICO! Não faça textos curtos. Adicione detalhes, contexto, emoções e diálogos para preencher todo o tempo. Se a história original for curta, EXPANDA com detalhes envolventes. Pense em cada segundo do vídeo - use TODO o tempo disponível!
+
+8. NÃO use emojis ou markdown na narração.
+
+Formato de Saída (Obrigatório):
+Sua resposta final deve seguir exatamente esta estrutura:
+
+HISTÓRIA ADAPTADA:
+[Insira o texto completo da história aqui, já reescrito e adaptado seguindo todas as regras acima.]
 
 HISTÓRIA ORIGINAL:
 Título: {title}
 
 {text}
-
-NARRAÇÃO ADAPTADA:
 """
         
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",  # Modelo grátis e poderoso!
             messages=[{"role": "user", "content": prompt}],
             temperature=0.8,
-            max_tokens=500
+            max_tokens=1200  # Aumentado para histórias de 60 segundos (~250 palavras)
         )
         
-        adapted_text = response.choices[0].message.content.strip()
+        full_response = response.choices[0].message.content.strip()
         
-        # Remove possíveis aspas no início/fim
-        adapted_text = adapted_text.strip('"').strip("'")
+        # Extrai apenas a seção "HISTÓRIA ADAPTADA:"
+        adapted_text = full_response
+        if "HISTÓRIA ADAPTADA:" in full_response:
+            # Pega tudo depois de "HISTÓRIA ADAPTADA:"
+            parts = full_response.split("HISTÓRIA ADAPTADA:")
+            if len(parts) > 1:
+                adapted_text = parts[1].strip()
+                
+                # Remove a seção "HISTÓRIA ORIGINAL:" se existir (apenas essa)
+                if "HISTÓRIA ORIGINAL:" in adapted_text:
+                    adapted_text = adapted_text.split("HISTÓRIA ORIGINAL:")[0].strip()
+        
+        # Remove possíveis aspas no início/fim e espaços extras
+        adapted_text = adapted_text.strip('"').strip("'").strip()
+        
+        # Remove linhas em branco múltiplas, mas mantém parágrafos
+        adapted_text = "\n".join([line for line in adapted_text.split("\n") if line.strip()])
         
         return adapted_text
     

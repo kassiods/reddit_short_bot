@@ -75,7 +75,7 @@ def create_vertical_video(video_path, duration):
     
     return clip
 
-def create_video(audio_path, output_path="assets/output/final.mp4", background_dir="assets/videos/", videos_count=3):
+def create_video(audio_path, output_path="assets/output/final.mp4", background_dir="assets/videos/", videos_count=3, subtitle_text=None):
     """
     Cria vídeo final combinando áudio e MÚLTIPLOS vídeos de fundo
     
@@ -84,6 +84,7 @@ def create_video(audio_path, output_path="assets/output/final.mp4", background_d
         output_path: Caminho de saída do vídeo
         background_dir: Diretório com vídeos de fundo
         videos_count: Quantidade de vídeos diferentes para usar
+        subtitle_text: Texto para gerar legendas (opcional)
     
     Returns:
         Caminho do vídeo gerado
@@ -121,6 +122,17 @@ def create_video(audio_path, output_path="assets/output/final.mp4", background_d
         
         # Adiciona áudio
         final_clip = video_clip.set_audio(audio)
+        
+        # Adiciona legendas se fornecido texto
+        if subtitle_text:
+            print("📝 Gerando legendas...")
+            try:
+                from subtitle_generate import add_subtitles_to_video
+                final_clip = add_subtitles_to_video(final_clip, subtitle_text, duration)
+                print("✅ Legendas adicionadas!")
+            except Exception as e:
+                print(f"⚠️ Erro ao adicionar legendas: {e}")
+                print("   Continuando sem legendas...")
         
         # Cria diretório de saída se não existir
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
