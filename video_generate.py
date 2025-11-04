@@ -37,7 +37,7 @@ def get_random_backgrounds(videos_dir="assets/videos/", count=3):
 
 def create_vertical_video(video_path, duration):
     """
-    Corta vídeo para formato vertical 9:16 (Shorts)
+    Corta vídeo para formato vertical 9:16 (Shorts) e garante duração necessária
     
     Args:
         video_path: Caminho do vídeo
@@ -46,11 +46,25 @@ def create_vertical_video(video_path, duration):
     Returns:
         VideoClip processado
     """
-    clip = VideoFileClip(video_path)
+    from moviepy.editor import concatenate_videoclips
     
-    # Pega segmento aleatório do vídeo
-    start_time = random.uniform(0, max(0, clip.duration - duration))
-    clip = clip.subclip(start_time, min(start_time + duration, clip.duration))
+    clip = VideoFileClip(video_path)
+    original_duration = clip.duration
+    
+    # Se o vídeo for mais curto que a duração necessária, faz loop manualmente
+    if original_duration < duration:
+        # Calcula quantas repetições são necessárias
+        loops_needed = int(duration / original_duration) + 1
+        clips_to_loop = [clip] * loops_needed
+        clip = concatenate_videoclips(clips_to_loop)
+    
+    # Pega segmento do vídeo com duração exata
+    if clip.duration > duration:
+        start_time = random.uniform(0, max(0, clip.duration - duration))
+        clip = clip.subclip(start_time, start_time + duration)
+    else:
+        # Se ainda for menor (caso raro), ajusta para duração exata
+        clip = clip.set_duration(duration)
     
     # Calcula dimensões para 9:16
     target_ratio = 9 / 16
@@ -75,7 +89,7 @@ def create_vertical_video(video_path, duration):
     
     return clip
 
-def create_video(audio_path, output_path="assets/output/final.mp4", background_dir="assets/videos/", videos_count=3, subtitle_text=None):
+def create_video(audio_path, output_path="assets/output/final.mp4", background_dir="assets/videos/", videos_count=3, add_subtitles=True, subtitle_style="tiktok"):
     """
     Cria vídeo final combinando áudio e MÚLTIPLOS vídeos de fundo
     
@@ -84,7 +98,8 @@ def create_video(audio_path, output_path="assets/output/final.mp4", background_d
         output_path: Caminho de saída do vídeo
         background_dir: Diretório com vídeos de fundo
         videos_count: Quantidade de vídeos diferentes para usar
-        subtitle_text: Texto para gerar legendas (opcional)
+        add_subtitles: Se True, adiciona legendas com Whisper (padrão: True)
+        subtitle_style: Estilo das legendas - tiktok, youtube, minimal (padrão: tiktok)
     
     Returns:
         Caminho do vídeo gerado
@@ -120,16 +135,30 @@ def create_video(audio_path, output_path="assets/output/final.mp4", background_d
         print("🔗 Unindo vídeos...")
         video_clip = concatenate_videoclips(clips, method="compose")
         
+        # Garante que o vídeo tenha exatamente a duração do áudio
+        if video_clip.duration < duration:
+            print(f"⚠️ Ajustando duração do vídeo: {video_clip.duration:.1f}s → {duration:.1f}s")
+            video_clip = video_clip.set_duration(duration)
+        elif video_clip.duration > duration:
+            print(f"⚠️ Cortando vídeo: {video_clip.duration:.1f}s → {duration:.1f}s")
+            video_clip = video_clip.subclip(0, duration)
+        
         # Adiciona áudio
         final_clip = video_clip.set_audio(audio)
         
-        # Adiciona legendas se fornecido texto
-        if subtitle_text:
-            print("📝 Gerando legendas...")
+        # Adiciona legendas com Whisper se solicitado
+        if add_subtitles:
+            print("🎙️ Gerando legendas com Whisper AI...")
             try:
-                from subtitle_generate import add_subtitles_to_video
-                final_clip = add_subtitles_to_video(final_clip, subtitle_text, duration)
-                print("✅ Legendas adicionadas!")
+                from subtitle_whisper import add_subtitles_to_video
+                final_clip = add_subtitles_to_video(
+                    final_clip, 
+                    audio_path, 
+                    style=subtitle_style,
+                    position="center",
+                    karaoke_mode=True  # Efeito karaoke: palavra atual em amarelo
+                )
+                print("✅ Legendas sincronizadas adicionadas!")
             except Exception as e:
                 print(f"⚠️ Erro ao adicionar legendas: {e}")
                 print("   Continuando sem legendas...")

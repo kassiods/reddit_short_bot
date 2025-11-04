@@ -32,8 +32,9 @@ O **Reddit Shorts Bot** transforma histórias virais do Reddit em vídeos vertic
 ✅ Extração de histórias diretamente da **API do Reddit**
 ✅ Resumo e adaptação automática usando **IA (Groq / Llama)**
 ✅ Narração com voz natural brasileira via **Edge TTS**
+✅ **Legendas sincronizadas com Whisper AI** (transcrição automática)
 ✅ Combinação de múltiplos vídeos de fundo (loops dinâmicos)
-✅ Geração de vídeos prontos para upload com legendas e áudio sincronizado
+✅ Geração de vídeos prontos para upload em **1080x1920 vertical**
 
 ---
 
@@ -135,12 +136,13 @@ python video_generate.py
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Componente           | Função                                |
-| -------------------- | ------------------------------------- |
-| **PRAW**             | Coleta de histórias via API do Reddit |
-| **Groq (Llama)**     | Resumo e adaptação textual            |
-| **Edge TTS**         | Narração em voz natural (PT-BR)       |
-| **MoviePy + FFmpeg** | Montagem e renderização de vídeo      |
+| Componente           | Função                                      |
+| -------------------- | ------------------------------------------- |
+| **PRAW**             | Coleta de histórias via API do Reddit       |
+| **Groq (Llama)**     | Resumo e adaptação textual                  |
+| **Edge TTS**         | Narração em voz natural (PT-BR)             |
+| **Whisper AI**       | Transcrição de áudio e legendas automáticas |
+| **MoviePy + FFmpeg** | Montagem e renderização de vídeo            |
 
 ---
 
@@ -166,6 +168,7 @@ reddit_short_bot/
 
 * 🎯 **Subreddits**: editar em `reddit_fetch.py`
 * 🔊 **Voz e velocidade**: ajustar em `tts_generate.py`
+* 📝 **Legendas**: ativar/desativar em `main.py` (ver `LEGENDAS.md`)
 * 🎞️ **Quantidade de vídeos de fundo**: configurar em `main.py`
 * 🧠 **Prompt de resumo**: customizar em `summarize.py`
 

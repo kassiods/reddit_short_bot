@@ -14,6 +14,11 @@ imageio-ffmpeg>=0.4.9
 # Imagens e legendas
 Pillow>=10.0.0
 
+# Transcrição de áudio com IA (Whisper)
+openai-whisper>=20231117
+torch>=2.0.0
+torchaudio>=2.0.0
+
 # Variaveis de ambiente
 python-dotenv>=1.0.0
 

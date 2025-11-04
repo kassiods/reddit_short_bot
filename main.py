@@ -76,7 +76,9 @@ def main():
         audio_path=audio_file,
         output_path=video_path,
         background_dir="assets/videos/",
-        videos_count=3  # Usa 3 vídeos diferentes!
+        videos_count=3,  # Usa 3 vídeos diferentes!
+        add_subtitles=True,  # Ativa legendas com Whisper
+        subtitle_style="tiktok"  # Estilo: tiktok, youtube ou minimal
     )
     
     if not final_video:
